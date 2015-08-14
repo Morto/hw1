@@ -115,7 +115,14 @@ process* create_process(char* inputString)
     //printf("%s \n", cwd);
    }
  }
-
+char* concat(char *s1, char *s2)
+{
+    char *result = malloc(strlen(s1)+strlen(s2)+1);//+1 for the zero-terminator
+    //in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
 
 int shell (int argc, char *argv[]) {
   char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
@@ -141,12 +148,24 @@ int shell (int argc, char *argv[]) {
       pid = fork();
       if(pid < 0)
 	perror("Fork process failed");
-      else
          
       if(pid == 0){
         cpid = getpid();
-        execve(t[0],t,NULL);
-        perror(*t);
+        
+        char *a = getenv("PATH"), *b;
+        tok_t * a1 = getToks(a);
+        int i;
+        for(i = 0; i < MAXTOKS && a1[i]; i++){
+	  //b = malloc(2000);
+          b = concat("/",t[0]);
+	  b = concat(a1[i],b);
+	  if(access(b, F_OK) != -1){
+          execve(b,t, NULL);
+          perror(*t);
+          }
+	  }
+	 execve(t[0],t,NULL);
+         perror(*t);
         exit(0);
       }
       else if(pid>0){
