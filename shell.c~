@@ -25,10 +25,10 @@ int cmd_quit(tok_t arg[]) {
 
 int cmd_help(tok_t arg[]);
 int cmd_cd(tok_t arg[]){
-    if(arg[1] == NULL)
+    if(arg[0] == NULL)
       return 0;
     else
-      chdir(arg[1]);
+      chdir(arg[0]);
 }
 
 
@@ -139,6 +139,7 @@ int shell (int argc, char *argv[]) {
     else {
       fprintf(stdout, "This shell only supports built-ins. Replace this to run programs as commands.\n");
     }
+    lineNum++;
     fprintf(stdout, "%d: %s: ", lineNum, pwd());
   }
   return 0;

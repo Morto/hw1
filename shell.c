@@ -137,8 +137,23 @@ int shell (int argc, char *argv[]) {
     fundex = lookup(t[0]); /* Is first token a shell literal */
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
-      fprintf(stdout, "This shell only supports built-ins. Replace this to run programs as commands.\n");
+      //fprintf(stdout, "This shell only supports built-ins. Replace this to run programs as commands.\n");
+      pid = fork();
+      if(pid < 0)
+	perror("Fork process failed");
+      else
+         
+      if(pid == 0){
+        cpid = getpid();
+        execve(t[0],t,NULL);
+        perror(*t);
+        exit(0);
+      }
+      else if(pid>0){
+	waitpid(pid,NULL,0);
+      }
     }
+    lineNum++;
     fprintf(stdout, "%d: %s: ", lineNum, pwd());
   }
   return 0;
